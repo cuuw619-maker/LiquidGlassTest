@@ -1,7 +1,19 @@
+import org.gradle.api.tasks.Copy
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+}
+
+val prepareWallpaper by tasks.registering(Copy::class) {
+    from(rootProject.file("Wallpaper.png"))
+    into(layout.buildDirectory.dir("generated/wallpaper/res/drawable-nodpi"))
+    rename { "wallpaper.png" }
+}
+
+tasks.named("preBuild").configure {
+    dependsOn(prepareWallpaper)
 }
 
 android {
@@ -16,8 +28,21 @@ android {
         versionName = "1.0"
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    sourceSets["main"].res.srcDir(
+        layout.buildDirectory.dir("generated/wallpaper/res")
+    )
+
     buildFeatures { compose = true }
     packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
