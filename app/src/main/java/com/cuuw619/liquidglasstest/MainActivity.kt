@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -19,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -71,8 +72,7 @@ private fun LiquidGlassApp() {
 
 @Composable
 private fun LiquidBackground() {
-    val transition = rememberInfiniteTransitionCompat()
-    val phase by transition
+    val phase by rememberInfiniteTransitionCompat()
     Box(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.wallpaper),
@@ -85,12 +85,12 @@ private fun LiquidBackground() {
             val glowX = size.width * (.22f + phase * .12f)
             val glowY = size.height * (.18f + phase * .06f)
             drawCircle(
-                Brush.radialGradient(
+                brush = Brush.radialGradient(
                     listOf(Color.White.copy(.10f), Color.Transparent),
                     radius = size.minDimension * .58f
                 ),
-                Offset(glowX, glowY),
-                size.minDimension * .58f
+                radius = size.minDimension * .58f,
+                center = Offset(glowX, glowY)
             )
             repeat(6) { i ->
                 val y = size.height * (i + 1) / 7f
